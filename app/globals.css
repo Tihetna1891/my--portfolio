@@ -1,26 +1,251 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Class-based dark mode (next-themes adds "dark" or "light" on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --muted: #475569;
+  }
+
+  html.dark {
+    --background: #020617;
+    --foreground: #f1f5f9;
+    --muted: #cbd5e1;
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-motion-orb,
+    .bg-motion-grid {
+      animation: none !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
+/* Ambient background motion */
+.bg-motion-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--foreground) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--foreground) 6%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 75%);
+}
+
+.bg-motion-orb {
+  animation: bg-float 22s ease-in-out infinite;
+}
+
+.bg-motion-orb-b {
+  animation-duration: 28s;
+  animation-delay: -8s;
+}
+
+.bg-motion-orb-c {
+  animation-duration: 26s;
+  animation-delay: -14s;
+}
+
+.glass-surface {
+  background-color: color-mix(in srgb, var(--background) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes bg-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3%, -4%) scale(1.05);
+  }
+  66% {
+    transform: translate(-2%, 3%) scale(0.96);
+  }
+}
+
+/* Brighten muted Tailwind text utilities in dark mode */
+.dark .text-slate-600,
+.dark .text-slate-500,
+.dark .text-slate-400,
+.dark .text-slate-700 {
+  color: var(--muted) !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4 {
+  color: #f8fafc;
+}
+
+/* Blog markdown (no @tailwindcss/typography — explicit styles) */
+.blog-content {
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.75;
+}
+
+.blog-content .blog-heading {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  scroll-margin-top: 6rem;
+}
+
+.blog-content .blog-h1 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.875rem;
+  line-height: 1.25;
+}
+
+.blog-content .blog-h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.875rem;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.blog-content .blog-h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.65rem;
+  font-size: 1.25rem;
+}
+
+.blog-content .blog-h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.blog-content .blog-paragraph {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.blog-content .blog-list {
+  margin: 0 0 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.blog-content .blog-list-disc {
+  list-style-type: disc;
+}
+
+.blog-content .blog-list-decimal {
+  list-style-type: decimal;
+}
+
+.blog-content .blog-list-item {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content .blog-list-item > .blog-paragraph {
+  margin-bottom: 0.35rem;
+}
+
+.blog-content .blog-blockquote {
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid #0ea5e9;
+  background: color-mix(in srgb, #0ea5e9 8%, transparent);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+}
+
+.blog-content .blog-hr {
+  margin: 2rem 0;
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+}
+
+.blog-content .blog-inline-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  color: #0ea5e9;
+}
+
+.dark .blog-content .blog-inline-code {
+  color: #38bdf8;
+}
+
+.blog-content .blog-pre {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.blog-content .blog-pre .blog-code-block {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.blog-content .blog-figure {
+  margin: 1.75rem 0;
+}
+
+.blog-content .blog-table-wrap {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.blog-content .blog-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.blog-content .blog-th,
+.blog-content .blog-td {
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.blog-content .blog-th {
+  font-weight: 600;
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
 }
